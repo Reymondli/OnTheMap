@@ -1,30 +1,22 @@
 //
-//  UdacityConstants.swift
+//  ParseConstants.swift
 //  OnTheMap1
 //
-//  Created by ziming li on 2017-07-15.
+//  Created by ziming li on 2017-07-18.
 //  Copyright © 2017 ziming li. All rights reserved.
 //
 
-extension UdacityClient {
-    
+extension ParseClient {
     struct Constants {
         
-        // MARK: Udacity API URL
-        static let udacityUrl = "https://www.udacity.com/api"
-        
-        // MARK: Extension of URL for Creating/Deleting a Session
-        static let session = "/session"
-        
-        // MARK: Extension of URL for Getting User Info
-        static let user = "/users"
-        
-        // MARK: Udacity Sign-up URL
-        static let udacitySignup = "https://www.udacity.com/account/auth#!/signup"
+        // MARK: Parse API URL
+        static let parseUrl = "https://parse.udacity.com/parse/classes/StudentLocation"
+
         
         // MARK: Udacity Request Headers
-        static let UdacityHeaders = [
-            "Accept": "application/json",
+        static let parseHeaders = [
+            "X-Parse-Application-Id": "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr",
+            "X-Parse-REST-API-Key": "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY",
             "Content-Type": "application/json"
         ]
     }
@@ -33,7 +25,7 @@ extension UdacityClient {
     enum Method: String {
         case GET
         case POST
-        case DELETE
+        case POT
     }
     
     struct JSONResponseKeys {
@@ -49,5 +41,3 @@ extension UdacityClient {
         static let expiration = "expiration"
     }
 }
-
-

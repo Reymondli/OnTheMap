@@ -10,6 +10,11 @@ import Foundation
 
 class UdacityClient: NSObject {
     
+    // MARK: Properties
+    var session = URLSession.shared
+    var sessionID: String? = nil
+    var userID: String? = nil
+    
     // MARK: Shared Instance
     class func sharedInstance() -> UdacityClient {
         struct Singleton {
@@ -18,22 +23,72 @@ class UdacityClient: NSObject {
         return Singleton.sharedInstance
     }
     
-    func authenticationByUdacity(username: String, password: String, completionHandlerForAuth: @escaping (_ success: Bool, _ errorString: String?)-> Void){
-        let request = NSMutableURLRequest(url: URL(string: Constants.udacityUrl)!)
-        request.httpMethod = httpMethod.post
-        request.addValue("application/json", forHTTPHeaderField: "Accept")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = "{\"udacity\": {\"username\": \"\(username)\", \"password\": \"\(password)\"}}".data(using: String.Encoding.utf8)
-        let session = URLSession.shared
-        let task = session.dataTask(with: request as URLRequest) { data, response, error in
-            if error != nil { // Handle error…
-                print(error!)
+    // MARK: Creat Session - Authentication
+    func authenticationByUdacity(username: String, password: String, completionHandlerForAuth: @escaping (_ error: String?)-> Void){
+        
+        let jsbody = [
+            "udacity": [
+                "username": username,
+                "password": password
+            ]
+        ]
+        let url = UdacityClient.Constants.udacityUrl + UdacityClient.Constants.session
+        let request = InitialRequest(url: url, jsbody: jsbody, method: UdacityClient.Method.POST)
+        ExecuteRequest(request: request) { (result, error) in
+            // Was there an error
+            guard error == nil else {
+                completionHandlerForAuth(error)
                 return
             }
-            let range = Range(5..<data!.count)
-            let newData = data?.subdata(in: range) /* subset response data! */
-            print(NSString(data: newData!, encoding: String.Encoding.utf8.rawValue)!)
+            
+            // Parse JSON Data
+            guard let account = result!["account"] as? [String : AnyObject], let userid = account["key"] as? String else {
+                print("Failed to Get Account Key")
+                completionHandlerForAuth("Username or password is incorrect")
+                return
+            }
+            
+            guard let session = result!["session"] as? [String : AnyObject], let sessionid = session["id"] as? String else {
+                print("Failed to Get Session ID")
+                completionHandlerForAuth("Username or password is incorrect")
+                return
+            }
+            
+            self.sessionID = sessionid
+            self.userID = userid
+            
+            completionHandlerForAuth(nil)
         }
-        task.resume()
     }
+    
+    // MARK: Delete Session
+    func logoutFromUdacity(completionHandlerForLogout: @escaping (_ error: String?)-> Void) {
+        
+        let url = UdacityClient.Constants.udacityUrl + UdacityClient.Constants.session
+        let request = InitialRequest(url: url, jsbody: nil, method: UdacityClient.Method.DELETE)
+        ExecuteRequest(request: request) { (result, error) in
+            // Was there an error
+            guard error == nil else {
+                completionHandlerForLogout(error)
+                return
+            }
+            
+            // Parse JSON Data
+            guard let session = result!["session"] as? [String: AnyObject], let sessionid = session["id"] as? String else {
+                print("Failed to Get Session ID")
+                completionHandlerForLogout("Logout Failed")
+                return
+            }
+            
+            self.sessionID = sessionid
+            self.userID = nil
+            
+            completionHandlerForLogout(nil)
+        }
+        
+    }
+    
+    // MARK: Manage User Info
+    
+
 }

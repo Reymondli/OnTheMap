@@ -13,7 +13,6 @@ class LoginViewController: UIViewController {
     // MARK: - Properties
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
-    @IBOutlet weak var loginButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,41 +32,42 @@ class LoginViewController: UIViewController {
     
     
     // MARK: - Login Button
-    @IBAction func loginPressed(_ sender: Any) {
-        
-        guard let emailAccount = emailTextField.text, !emailAccount.isEmpty else {
-            displayAlert(message: "Email cannot be empty", title: "Login Failed")
+    @IBAction func loginPressed(_ sender: UIButton? = nil) {
+        guard emailTextField.text!.isEmpty == false && passwordTextField.text!.isEmpty == false else {
+            displayAlert(message: "Email or Password cannot be empty", title: "Login Failed")
             return
         }
+        // Might Add an Spinning Icon Indicating "Processing"
         
-        guard let password = passwordTextField.text, !password.isEmpty else {
-            displayAlert(message: "Password cannot be empty", title: "Login Failed")
-            return
-        }
-        
-        UdacityClient.sharedInstance().authenticationByUdacity(username: emailAccount, password: password){ (success, errorString) in
-            
+        // MARK: - Authenticate with Udacity Credential
+        UdacityClient.sharedInstance().authenticationByUdacity(username: emailTextField.text!, password: passwordTextField.text!){ (error: String?) in
+            // Execute on the Main Thread when Dealing with UIKit
+            DispatchQueue.main.async(execute: {
+                guard error == nil else {
+                    self.displayAlert(message: error!, title: "Login Failed")
+                    return
+                }
+            let nextController = self.storyboard!.instantiateViewController(withIdentifier: "NavigationController")
+            self.present(nextController, animated: true, completion: nil)
+            })
         }
     }
-    
-    func loginProcess(username: String, password: String) {
-        
-    }
+
     
     // MARK: - Sign-Up Button
     @IBAction func signupPressed(_ sender: Any) {
-        if let url = URL(string: "https://auth.udacity.com/sign-up") {
+        if let url = URL(string: UdacityClient.Constants.udacitySignup) {
             UIApplication.shared.open(url, options: [:])
         }
     }
     
     // MARK: - Alert
     func displayAlert(message: String, title: String) {
-        let alert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         
-        alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: { (action) in
+        alert.addAction(UIAlertAction(title: "Ok", style: .default) { (action: UIAlertAction!) in
             alert.dismiss(animated: true, completion: nil)
-        }))
+        })
         
         self.present(alert, animated: true, completion: nil)
     }
