@@ -21,12 +21,12 @@ class LoginViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        super .viewWillAppear(animated)
+        super.viewWillAppear(animated)
         subscribeToKeyboardNotifications()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        super .viewWillDisappear(animated)
+        super.viewWillDisappear(animated)
         unsubscribeFromKeyboardNotifications()
     }
     
@@ -40,7 +40,7 @@ class LoginViewController: UIViewController {
         // Might Add an Spinning Icon Indicating "Processing"
         
         // MARK: - Authenticate with Udacity Credential
-        UdacityClient.sharedInstance().authenticationByUdacity(username: emailTextField.text!, password: passwordTextField.text!){ (error: String?) in
+        UdacityClient.sharedInstance.authenticationByUdacity(username: emailTextField.text!, password: passwordTextField.text!){ (error: String?) in
             // Execute on the Main Thread when Dealing with UIKit
             DispatchQueue.main.async(execute: {
                 guard error == nil else {

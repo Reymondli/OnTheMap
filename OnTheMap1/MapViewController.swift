@@ -28,7 +28,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         // Step 2: Add Pin Based on OTMData Storage
         var annotations = [MKPointAnnotation]()
         
-        for eachStudent in OTMData.sharedInstance().studentList {
+        for eachStudent in OTMData.sharedInstance.studentList {
             
             // Retrieve latitude and longitude of eachStudent
             let latitude = CLLocationDegrees(eachStudent.latitude ?? 0.0)
@@ -45,7 +45,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             annotations.append(annotation)
         }
         
-        self.mapView.addAnnotations(annotations)
+        mapView.addAnnotations(annotations)
     }
     
     // MARK: Returns the view associated with the specified annotation object.

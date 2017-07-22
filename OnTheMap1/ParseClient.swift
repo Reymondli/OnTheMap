@@ -11,12 +11,14 @@ import Foundation
 class ParseClient: NSObject {
     
     // MARK: Shared Instance
+    /*
     class func sharedInstance() -> ParseClient {
         struct Singleton {
             static var sharedInstance = ParseClient()
         }
         return Singleton.sharedInstance
-    }
+    }*/
+    static var sharedInstance = ParseClient()
     
     // MARK: GETting a Single Student Location
     // UniqueKey: Udacity Account ID

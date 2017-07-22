@@ -58,31 +58,33 @@ extension ParseClient {
             /* GUARD: Was there an error? */
             guard (error == nil) else {
                 print("There was an error with your request")
-                completionHandlerForExecute(nil, "Connection Error - Error")
+                // Connection Error - Error
+                completionHandlerForExecute(nil, "Connection Failure")
                 return
             }
             
             /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                // Connection Error - Status Code
                 print("Your request returned a status code other than 2xx!")
-                completionHandlerForExecute(nil, "Connection Error - Status Code")
+                completionHandlerForExecute(nil, "Invalid Username or Password")
                 return
             }
             
             /* GUARD: Was there any data returned? */
             guard let data = data else {
                 print("No data was returned by the request!")
-                completionHandlerForExecute(nil, "Connection Error - Data")
+                completionHandlerForExecute(nil, "No data returned, please check your username and password")
                 return
             }
-            print(NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue)!)
+            // print(NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue)!)
             
             let parsedResult: Any!
             do {
                 parsedResult = try JSONSerialization.jsonObject(with: data as Data, options: .allowFragments)
             } catch {
                 print("JSON converting error")
-                completionHandlerForExecute(nil, "Connection error - Parse")
+                completionHandlerForExecute(nil, "Invalid data retrieved, please check your username and password")
                 return
             }
             

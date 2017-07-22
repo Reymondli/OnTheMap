@@ -25,21 +25,25 @@ class PreviewViewController: UIViewController, MKMapViewDelegate {
     
     @IBOutlet weak var previewMapView: MKMapView!
     
+    @IBOutlet weak var processingIndicator: UIActivityIndicatorView!
+    
     // MARK: Back Button Goes Back to New Location/URL Page
     @IBAction func backPressed(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
     
-    // MARK: Done Button Submits and Updates New Location and URL
-    @IBAction func donePressed(_ sender: Any) {
+    @IBAction func submitPressed(_ sender: Any) {
         
+        self.processingIndicator.isHidden = false
+        self.processingIndicator.startAnimating()
         // MARK: Upload new location and URL
         // Step 1: - Get Current User Info based on User ID when logged in
-        UdacityClient.sharedInstance().getUserInfo(userID: UdacityClient.sharedInstance().userID!) { (UdacityUser, error) in
+        UdacityClient.sharedInstance.getUserInfo(userID: UdacityClient.sharedInstance.userID!) { (UdacityUser, error) in
             
             // Check Error
             guard error == nil else {
                 DispatchQueue.main.async(execute: {
+                    self.processingIndicator.stopAnimating()
                     self.displayAlert(message: error!, title: "Error")
                 })
                 return
@@ -56,33 +60,38 @@ class PreviewViewController: UIViewController, MKMapViewDelegate {
                     "mediaURL": self.url as AnyObject,
                     "latitude": Double(self.coordinate!.latitude) as AnyObject,
                     "longitude": Double(self.coordinate!.longitude) as AnyObject,
-                ])
+                    ])
             
             // Step 2: - Provide the User Info to Parse
             // Check local database if user exist or not
-            if OTMData.sharedInstance().student != nil {
+            if OTMData.sharedInstance.student != nil {
                 // Use Previous Object ID
-                currentInfo.objectId = OTMData.sharedInstance().student!.objectId
+                currentInfo.objectId = OTMData.sharedInstance.student!.objectId
                 // Overwrite user Info
-                ParseClient.sharedInstance().putLocation(student: currentInfo){ (error) in
+                ParseClient.sharedInstance.putLocation(student: currentInfo){ (error) in
                     DispatchQueue.main.async(execute: {
                         guard error == nil else {
+                            self.processingIndicator.stopAnimating()
                             self.displayAlert(message: error!, title: "Error")
-                        return
+                            return
                         }
                         // MARK: Once Success, Unwind Segue and Return to Main Controller Page
+                        self.processingIndicator.stopAnimating()
+                        self.processingIndicator.isHidden = true
                         self.performSegue(withIdentifier: "MainController", sender: self)
                     })
                 }
             } else {
                 // Create this new user Info and post
-                ParseClient.sharedInstance().postLocation(student: currentInfo) { (error) in
+                ParseClient.sharedInstance.postLocation(student: currentInfo) { (error) in
                     DispatchQueue.main.async(execute: {
                         guard error == nil else {
+                            self.processingIndicator.stopAnimating()
                             self.displayAlert(message: error!, title: "Error")
-                        return
+                            return
                         }
                         // MARK: Once Success, Unwind Segue and Return to Main Controller Page
+                        self.processingIndicator.stopAnimating()
                         self.performSegue(withIdentifier: "MainController", sender: self)
                     })
                 }
@@ -90,18 +99,28 @@ class PreviewViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
+    // MARK: Cancel Button dismiss editing and goes back to Main Tab View
+    @IBAction func cancelPressed(_ sender: Any) {
+        // MARK: Once Success, Unwind Segue and Return to Main Controller Page
+        self.performSegue(withIdentifier: "MainController", sender: self)
+    }
+    
     // MARK: Create a Pin on the map based on New Location User Provided
     private func previewPin(coordinate: CLLocationCoordinate2D) {
+        processingIndicator.isHidden = false
+        processingIndicator.startAnimating()
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
         annotation.title = location
         
-        let region = MKCoordinateRegionMake(coordinate, MKCoordinateSpanMake(0.01, 0.01))
+        let region = MKCoordinateRegionMake(coordinate, MKCoordinateSpanMake(0.1, 0.1))
         
         DispatchQueue.main.async(execute: {
             self.previewMapView.addAnnotation(annotation)
             self.previewMapView.setRegion(region, animated: true)
             self.previewMapView.regionThatFits(region)
+            self.processingIndicator.stopAnimating()
+            self.processingIndicator.isHidden = true
         })
     }
     

@@ -16,12 +16,14 @@ class UdacityClient: NSObject {
     var userID: String? = nil
     
     // MARK: Shared Instance
+    /*
     class func sharedInstance() -> UdacityClient {
         struct Singleton {
             static var sharedInstance = UdacityClient()
         }
         return Singleton.sharedInstance
-    }
+    }*/
+    static var sharedInstance = UdacityClient()
     
     // MARK: Creat Session - Authentication
     func authenticationByUdacity(username: String, password: String, completionHandlerForAuth: @escaping (_ error: String?)-> Void){
@@ -33,8 +35,8 @@ class UdacityClient: NSObject {
             ]
         ]
         let url = UdacityClient.Constants.udacityUrl + UdacityClient.Constants.session
-        let request = InitialRequest(url: url, jsbody: jsbody, method: UdacityClient.Method.POST)
-        ExecuteRequest(request: request) { (result, error) in
+        let request = initialRequest(url: url, jsbody: jsbody, method: UdacityClient.Method.POST)
+        executeRequest(request: request) { (result, error) in
             // Was there an error
             guard error == nil else {
                 completionHandlerForAuth(error)
@@ -65,8 +67,8 @@ class UdacityClient: NSObject {
     func logoutFromUdacity(completionHandlerForLogout: @escaping (_ error: String?)-> Void) {
         
         let url = UdacityClient.Constants.udacityUrl + UdacityClient.Constants.session
-        let request = InitialRequest(url: url, jsbody: nil, method: UdacityClient.Method.DELETE)
-        ExecuteRequest(request: request) { (result, error) in
+        let request = initialRequest(url: url, jsbody: nil, method: UdacityClient.Method.DELETE)
+        executeRequest(request: request) { (result, error) in
             // Was there an error
             guard error == nil else {
                 completionHandlerForLogout(error)
@@ -92,9 +94,9 @@ class UdacityClient: NSObject {
     func getUserInfo(userID: String, completionHandlerForGetInfo: @escaping (_ user: UdacityUserInfo?, _ error: String?)-> Void) {
         
         let url = UdacityClient.Constants.udacityUrl + UdacityClient.Constants.user + "/" + userID
-        let request = InitialRequest(url: url, method: UdacityClient.Method.GET)
+        let request = initialRequest(url: url, method: UdacityClient.Method.GET)
         
-        ExecuteRequest(request: request) { (result, error) in
+        executeRequest(request: request) { (result, error) in
             // Was there an error
             guard error == nil else {
                 completionHandlerForGetInfo(nil, error)

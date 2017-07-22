@@ -16,7 +16,7 @@ extension UdacityClient {
     }
     
     // MARK: Step 1 - Initialize Request
-    func InitialRequest(url: String, jsbody: Any? = nil, method: UdacityClient.Method) -> NSMutableURLRequest {
+    func initialRequest(url: String, jsbody: Any? = nil, method: UdacityClient.Method) -> NSMutableURLRequest {
         let request = NSMutableURLRequest(url: NSURL(string: url)! as URL)
         request.httpMethod = method.rawValue.uppercased()
         
@@ -45,21 +45,23 @@ extension UdacityClient {
     }
     
     // MARK: Step 2 - Execute Request
-    func ExecuteRequest(request: NSMutableURLRequest, completionHandlerForExecute: @escaping (_ result: AnyObject?, _ error: String?) -> Void) -> Void {
+    func executeRequest(request: NSMutableURLRequest, completionHandlerForExecute: @escaping (_ result: AnyObject?, _ error: String?) -> Void) -> Void {
         let session = URLSession.shared
         let task = session.dataTask(with: request as URLRequest) { data, response, error in
             
             /* GUARD: Was there an error? */
             guard (error == nil) else {
                 print("There was an error with your request")
-                completionHandlerForExecute(nil, "Connection Error - Error")
+                // Connection Error - Error
+                completionHandlerForExecute(nil, "Connection Failure")
                 return
             }
             
             /* GUARD: Did we get a successful 2XX response? */
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                // Connection Error - Status Code
                 print("Your request returned a status code other than 2xx!")
-                completionHandlerForExecute(nil, "Connection Error - Status Code")
+                completionHandlerForExecute(nil, "Invalid Username or Password")
                 return
             }
             
@@ -67,17 +69,17 @@ extension UdacityClient {
             /* subset response data! */
             guard let data = self.ShiftedData(data: data! as NSData) else {
                 print("No data was returned by the request!")
-                completionHandlerForExecute(nil, "Connection Error - Data")
+                completionHandlerForExecute(nil, "No data returned, please check your username and password")
                 return
             }
-            print(NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue)!)
+            // print(NSString(data: data as Data, encoding: String.Encoding.utf8.rawValue)!)
             
             let parsedResult: Any!
             do {
                 parsedResult = try JSONSerialization.jsonObject(with: data as Data, options: .allowFragments)
             } catch {
                 print("JSON converting error")
-                completionHandlerForExecute(nil, "Connection error - Parse")
+                completionHandlerForExecute(nil, "Invalid data retrieved, please check your username and password")
                 return
             }
             

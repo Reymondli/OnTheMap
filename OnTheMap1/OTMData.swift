@@ -19,11 +19,12 @@ class OTMData {
     
     // MARK: List of Student Locations
     var studentList: [StudentInfo] = [StudentInfo]()
-    
+    /*
     class func sharedInstance() -> OTMData {
         struct Singleton {
             static var sharedInstance = OTMData()
         }
         return Singleton.sharedInstance
-    }
+    }*/
+    static var sharedInstance = OTMData()
 }

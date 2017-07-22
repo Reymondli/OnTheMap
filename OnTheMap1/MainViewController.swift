@@ -27,19 +27,24 @@ class MainViewController: UITabBarController {
     @IBAction func logoutPressed(_ sender: Any) {
         // Might add an confirmation pop-up in case of mis-click
         
-        UdacityClient.sharedInstance().logoutFromUdacity() { (error) in
+        UdacityClient.sharedInstance.logoutFromUdacity() { (error) in
+            DispatchQueue.main.async (execute: {
+                guard error == nil else {
+                    self.displayAlert(message: error!, title: "Logout Failure")
+                    return
+                }
             
+                // Return to Login Window
+                self.dismiss(animated: true, completion: nil)
+            })
         }
-        
-        // Return to Login Window
-        self.dismiss(animated: true, completion: nil)
     }
     
     
     // MARK: - Refresh Map and/or Table List
     @IBAction func refreshPressed() {
         
-        ParseClient.sharedInstance().getMultipleLocation{ (students, error) in
+        ParseClient.sharedInstance.getMultipleLocation{ (students, error) in
             DispatchQueue.main.async (execute: {
                 guard error == nil else {
                     self.displayAlert(message: error!, title: "Update Failure")
@@ -47,7 +52,7 @@ class MainViewController: UITabBarController {
                 }
                 
                 // Store/Update Student List inside OTMData
-                OTMData.sharedInstance().studentList = students!
+                OTMData.sharedInstance.studentList = students!
                 
                 // Update Pin Display on Map View Tab
                 (self.viewControllers![0] as! MapViewController).showPin()
@@ -61,7 +66,7 @@ class MainViewController: UITabBarController {
     // MARK: - Add New Location Pin
     @IBAction func addPinPressed(_ sender: Any) {
         // Check Pin Records for Current User
-        ParseClient.sharedInstance().getSingleLocation(uniqueKey: UdacityClient.sharedInstance().userID!) { (student, error) in
+        ParseClient.sharedInstance.getSingleLocation(uniqueKey: UdacityClient.sharedInstance.userID!) { (student, error) in
             // Main Thread
             DispatchQueue.main.async(execute: {
                 guard error == nil else {
@@ -69,7 +74,7 @@ class MainViewController: UITabBarController {
                     return
                 }
                 
-                OTMData.sharedInstance().student = student
+                OTMData.sharedInstance.student = student
                 let nextController = self.storyboard!.instantiateViewController(withIdentifier: "NewLocation")
                 // Double Check
                 if student != nil {

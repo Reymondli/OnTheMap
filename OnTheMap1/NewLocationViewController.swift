@@ -15,6 +15,7 @@ class NewLocationViewController: UIViewController {
     // MARK: Properties
     @IBOutlet weak var newLocation: UITextField!
     @IBOutlet weak var newURL: UITextField!
+    @IBOutlet weak var geocodingIndicator: UIActivityIndicatorView!
     
     var location: String = ""
     var coordinate: CLLocationCoordinate2D?
@@ -25,6 +26,7 @@ class NewLocationViewController: UIViewController {
         super.viewDidLoad()
         newLocation.delegate = self
         newURL.delegate = self
+        geocodingIndicator.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -52,7 +54,8 @@ class NewLocationViewController: UIViewController {
         }
         self.url = newURL.text!
         // MARK: Might add spinning icon during processing...
-        
+        geocodingIndicator.isHidden = false
+        geocodingIndicator.startAnimating()
         // MARK: Find Location User Provided
         let newlocation = newLocation.text!
         CLGeocoder().geocodeAddressString(newlocation) { (placemark, error) in
@@ -60,6 +63,8 @@ class NewLocationViewController: UIViewController {
             // Was there any error?
             guard error == nil else {
                 self.displayAlert(message: "Could Not Find This Location", title: "I'm Lost T T")
+                self.geocodingIndicator.stopAnimating()
+                self.geocodingIndicator.isHidden = true
                 return
             }
             
@@ -67,6 +72,8 @@ class NewLocationViewController: UIViewController {
             self.coordinate = placemark!.first!.location!.coordinate
             
             // Parse Location and Coordinate Value to Preview Controller
+            self.geocodingIndicator.stopAnimating()
+            self.geocodingIndicator.isHidden = true
             self.performSegue(withIdentifier: "PreviewLocation", sender: self)
         }
         
