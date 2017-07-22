@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		722CB1F21F20435700EAB81D /* OTMData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CB1F11F20435700EAB81D /* OTMData.swift */; };
+		722CB1F41F219ECB00EAB81D /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CB1F31F219ECB00EAB81D /* PreviewViewController.swift */; };
+		722CB1F61F22DDF800EAB81D /* UIMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 722CB1F51F22DDF800EAB81D /* UIMethods.swift */; };
 		72464F6B1F17FD5400A0E6E1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72464F6A1F17FD5400A0E6E1 /* AppDelegate.swift */; };
 		72464F6D1F17FD5400A0E6E1 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72464F6C1F17FD5400A0E6E1 /* LoginViewController.swift */; };
 		72464F701F17FD5400A0E6E1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 72464F6E1F17FD5400A0E6E1 /* Main.storyboard */; };
@@ -46,6 +49,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		722CB1F11F20435700EAB81D /* OTMData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OTMData.swift; sourceTree = "<group>"; };
+		722CB1F31F219ECB00EAB81D /* PreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
+		722CB1F51F22DDF800EAB81D /* UIMethods.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIMethods.swift; sourceTree = "<group>"; };
 		72464F671F17FD5400A0E6E1 /* OnTheMap1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		72464F6A1F17FD5400A0E6E1 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		72464F6C1F17FD5400A0E6E1 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -166,6 +172,7 @@
 			children = (
 				7269DC071F1EED24001FF054 /* Parse */,
 				7299D1631F1856B10036A3C0 /* Udacity */,
+				722CB1F11F20435700EAB81D /* OTMData.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -178,6 +185,8 @@
 				7299D16D1F1C443D0036A3C0 /* ListViewController.swift */,
 				7299D16F1F1C444D0036A3C0 /* MapViewController.swift */,
 				7299D1711F1C44AD0036A3C0 /* NewLocationViewController.swift */,
+				722CB1F31F219ECB00EAB81D /* PreviewViewController.swift */,
+				722CB1F51F22DDF800EAB81D /* UIMethods.swift */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -261,6 +270,7 @@
 				TargetAttributes = {
 					72464F661F17FD5400A0E6E1 = {
 						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = 283DJ7CH6F;
 						ProvisioningStyle = Automatic;
 					};
 					72464F7A1F17FD5400A0E6E1 = {
@@ -328,11 +338,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7299D1701F1C444D0036A3C0 /* MapViewController.swift in Sources */,
+				722CB1F61F22DDF800EAB81D /* UIMethods.swift in Sources */,
 				7269DC0D1F1EED66001FF054 /* ParseConvenience.swift in Sources */,
 				72464F6D1F17FD5400A0E6E1 /* LoginViewController.swift in Sources */,
 				7269DC0B1F1EED58001FF054 /* ParseConstants.swift in Sources */,
 				7299D1671F1AFC5A0036A3C0 /* UdacityConstants.swift in Sources */,
+				722CB1F21F20435700EAB81D /* OTMData.swift in Sources */,
 				7299D1721F1C44AD0036A3C0 /* NewLocationViewController.swift in Sources */,
+				722CB1F41F219ECB00EAB81D /* PreviewViewController.swift in Sources */,
 				72464F6B1F17FD5400A0E6E1 /* AppDelegate.swift in Sources */,
 				7299D1691F1B01A70036A3C0 /* UdacityConvenience.swift in Sources */,
 				7269DC091F1EED47001FF054 /* ParseClient.swift in Sources */,
@@ -494,6 +507,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 283DJ7CH6F;
 				INFOPLIST_FILE = OnTheMap1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Reymond.OnTheMap1;
@@ -506,6 +520,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				DEVELOPMENT_TEAM = 283DJ7CH6F;
 				INFOPLIST_FILE = OnTheMap1/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Reymond.OnTheMap1;

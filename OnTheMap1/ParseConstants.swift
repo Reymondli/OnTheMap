@@ -25,7 +25,7 @@ extension ParseClient {
     enum Method: String {
         case GET
         case POST
-        case POT
+        case PUT
     }
     
     struct JSONResponseKeys {

@@ -88,7 +88,41 @@ class UdacityClient: NSObject {
         
     }
     
-    // MARK: Manage User Info
+    // MARK: Get User Info
+    func getUserInfo(userID: String, completionHandlerForGetInfo: @escaping (_ user: UdacityUserInfo?, _ error: String?)-> Void) {
+        
+        let url = UdacityClient.Constants.udacityUrl + UdacityClient.Constants.user + "/" + userID
+        let request = InitialRequest(url: url, method: UdacityClient.Method.GET)
+        
+        ExecuteRequest(request: request) { (result, error) in
+            // Was there an error
+            guard error == nil else {
+                completionHandlerForGetInfo(nil, error)
+                return
+            }
+            
+            // Parse JSON Data
+            guard let user = result!["user"] as? [String: AnyObject] else {
+                print("Failed to Get Session ID")
+                completionHandlerForGetInfo(nil, error)
+                return
+            }
+            
+            guard let firstName = user["first_name"] as? String, let lastName = user["last_name"] as? String else {
+                print("Failed to Get Username")
+                completionHandlerForGetInfo(nil, error)
+                return
+            }
+            
+            let saveThisUser = UdacityUserInfo(dictionary: [
+                "id": userID as AnyObject,
+                "firstName": firstName as AnyObject,
+                "lastName": lastName as AnyObject
+                ])
+            
+            completionHandlerForGetInfo(saveThisUser, nil)
+        }
+    }
     
 
 }
